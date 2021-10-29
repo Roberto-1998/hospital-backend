@@ -11,15 +11,20 @@ const app=express();
 //Base de datos
 dbConnection();
 
-//Middlewares
-app.use(cors());
+//?Middlewares
 
-//Rutas
-app.get('/', (req, res)=>{
-    res.status(400).json({
-        msg:'Hola mundo'
-    })
-})
+    //CORS
+    app.use(cors());
+
+    //JSON
+    app.use(express.json());
+
+    //Rutas
+    app.use('/api/usuarios', require('./routes/usuarios'));
+    app.use('/api/login', require('./routes/auth'));
+
+
+
 
 
 
