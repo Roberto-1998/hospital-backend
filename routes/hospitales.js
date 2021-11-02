@@ -17,9 +17,18 @@ router.post('/',[
     validarCampos
 ] ,crearHospital);
 
-router.put('/:id', actualizarHospital);
+router.put('/:id',[
+    validarJWT,
+    check('id', 'El id no es válido').isMongoId(),
+    check('nombre', 'El nombre es requerido').notEmpty(),
+    validarCampos
+], actualizarHospital);
 
-router.delete('/:id', borrarHospital);
+router.delete('/:id',[
+    validarJWT,
+    check('id', 'El id no es válido').isMongoId(),
+    validarCampos
+] , borrarHospital);
 
 
 module.exports=router;

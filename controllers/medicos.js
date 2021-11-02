@@ -65,21 +65,75 @@ const crearMedico=async(req, res=response)=>{
 
 }
 
-const actualizarMedico=(req, res=response)=>{
+const actualizarMedico=async(req, res=response)=>{
 
-    res.json({
-        ok:true,
-        msg:'ActualizarMedico'
-    })
+    const {id}=req.params;
+    const uid=req.uid;
 
+    try {
+
+        const existeMedico=await Medico.findById(id);
+        if(!existeMedico){
+            return res.status(400).json({
+                ok:false,
+                msg:'No existe un médico para ese id'
+            })
+        }
+
+        const datos={
+            ...req.body,
+            usuario:uid
+        }
+
+        const medicoActualizado=await Medico.findByIdAndUpdate(id, datos, {new:true});
+        res.json({
+            ok:true,
+            medico:medicoActualizado
+        })
+    
+
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok:false,
+            msg:'Error no manejado por el backend'
+        })
+    }
+
+    
 }
 
-const borrarMedico=(req, res=response)=>{
+const borrarMedico=async(req, res=response)=>{
 
-    res.json({
-        ok:true,
-        msg:'BorrarMedico'
-    })
+    const {id}=req.params;
+   
+
+    try {
+
+        const existeMedico=await Medico.findById(id);
+        if(!existeMedico){
+            return res.status(400).json({
+                ok:false,
+                msg:'No existe un médico para ese id'
+            })
+        }
+    
+        const medicoBorrado=await Medico.findByIdAndDelete(id);
+        res.json({
+            ok:true,
+            medico:medicoBorrado
+        })
+    
+
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok:false,
+            msg:'Error no manejado por el backend'
+        })
+    }
 
 }
 

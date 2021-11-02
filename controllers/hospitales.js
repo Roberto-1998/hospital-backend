@@ -24,11 +24,45 @@ const getHospitales=async(req, res=response)=>{
 
 }
 
-const actualizarHospital=(req, res=response)=>{
-    res.json({
-        ok:true,
-        msg:'ActualizarHospital'
-    })
+const actualizarHospital=async(req, res=response)=>{
+
+    const {id}=req.params;
+    const uid=req.uid;
+
+    try {
+             const existeHospital=await Hospital.findById(id);
+            if(!existeHospital){
+                return res.status(400).json({
+                    ok:false,
+                    msg:'No existe un hospital para ese id'
+                })
+            }
+
+            const cambiosHospital={
+                ...req.body,
+                usuario:uid
+            }
+
+            const hospitalActualizado=await Hospital.findByIdAndUpdate(id, cambiosHospital, {new:true});
+
+
+            res.json({
+                ok:true,
+                hospital:hospitalActualizado
+            })
+
+
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok:false,
+            msg:'Error no manejado por el backend'
+        })
+        
+    }
+    
+    
     
 }
 
@@ -64,12 +98,39 @@ const crearHospital=async(req, res=response)=>{
     
 }
 
-const borrarHospital=(req, res=response)=>{
-    res.json({
-        ok:true,
-        msg:'BorrarHospital'
-    })
+const borrarHospital=async(req, res=response)=>{
+
+    const {id}=req.params;
+
+    try {
+
+        const existeHospital=await Hospital.findById(id);
+        if(!existeHospital){
+            return res.status(400).json({
+                ok:false,
+                msg:'No existe un hospital para ese id'
+            })
+        }
+
+        const hospitalBorradoo=await Hospital.findByIdAndDelete(id);
+
+
+        res.json({
+            ok:true,
+        hospital: hospitalBorradoo
+        })
     
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok:false,
+            msg:'Error no manejado por el backend'
+        })
+        
+    }
+
+   
 }
 
 module.exports={
