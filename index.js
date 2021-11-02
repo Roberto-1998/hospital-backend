@@ -23,6 +23,9 @@ dbConnection();
     //FileUpload
     app.use(expressFileUpload());
 
+    //Public folder
+    app.use(express.static('public'));
+
 
     //Rutas
     app.use('/api/usuarios', require('./routes/usuarios'));
